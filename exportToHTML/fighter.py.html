@@ -1,0 +1,112 @@
+<html>
+<head>
+<title>fighter.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6897bb;}
+.s3 { color: #808080;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+fighter.py</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">pygame</span>
+
+<span class="s0">class </span><span class="s1">Fighter():</span>
+    <span class="s0">def </span><span class="s1">__init__(self</span><span class="s0">, </span><span class="s1">x</span><span class="s0">, </span><span class="s1">y</span><span class="s0">, </span><span class="s1">data</span><span class="s0">, </span><span class="s1">sprite_sheet</span><span class="s0">, </span><span class="s1">animation_steps):</span>
+        <span class="s1">self.size = data[</span><span class="s2">0</span><span class="s1">]</span>
+        <span class="s1">self.flip = </span><span class="s0">False</span>
+        <span class="s1">self.animation_list = self.load_images(sprite_sheet</span><span class="s0">, </span><span class="s1">animation_steps)</span>
+        <span class="s1">self.rect = pygame.Rect((x</span><span class="s0">, </span><span class="s1">y</span><span class="s0">, </span><span class="s2">80</span><span class="s0">, </span><span class="s2">180</span><span class="s1">))</span>
+        <span class="s1">self.vel_y = </span><span class="s2">0</span>
+        <span class="s1">self.jump = </span><span class="s0">False</span>
+        <span class="s1">self.attacking = </span><span class="s0">False</span>
+        <span class="s1">self.attack_type = </span><span class="s2">0</span>
+        <span class="s1">self.health = </span><span class="s2">100</span>
+
+    <span class="s0">def </span><span class="s1">load_images(self</span><span class="s0">, </span><span class="s1">sprite_sheet</span><span class="s0">, </span><span class="s1">animation_steps):</span>
+     <span class="s3">#extract images from spritesheet</span>
+     <span class="s1">animation_list = []</span>
+     <span class="s0">for </span><span class="s1">y</span><span class="s0">, </span><span class="s1">animation </span><span class="s0">in </span><span class="s1">enumerate(animation_steps):</span>
+       <span class="s1">temp_img_list = []</span>
+       <span class="s0">for </span><span class="s1">x </span><span class="s0">in </span><span class="s1">range(animation):</span>
+         <span class="s1">temp_img = sprite_sheet.subsurface(x * self.size</span><span class="s0">, </span><span class="s1">y * self.size</span><span class="s0">, </span><span class="s1">self.size</span><span class="s0">, </span><span class="s1">self.size)</span>
+         <span class="s1">temp_img_list.append(temp_img)</span>
+       <span class="s1">animation_list.append(temp_img_list)</span>
+     <span class="s0">return </span><span class="s1">animation_list</span>
+
+
+    <span class="s0">def </span><span class="s1">move(self</span><span class="s0">, </span><span class="s1">screen_width</span><span class="s0">, </span><span class="s1">screen_height</span><span class="s0">, </span><span class="s1">surface</span><span class="s0">, </span><span class="s1">target):</span>
+     <span class="s1">SPEED = </span><span class="s2">10</span>
+     <span class="s1">GRAVITY = </span><span class="s2">2</span>
+     <span class="s1">dx = </span><span class="s2">0</span>
+     <span class="s1">dy = </span><span class="s2">0</span>
+
+    <span class="s3">#get keypresses</span>
+     <span class="s1">key = pygame.key.get_pressed()</span>
+
+    <span class="s3">#can only perform other actions if not currently attacking</span>
+     <span class="s0">if </span><span class="s1">self.attacking == </span><span class="s0">False</span><span class="s1">:</span>
+
+     <span class="s3"># movement</span>
+      <span class="s0">if </span><span class="s1">key[pygame.K_a]:</span>
+       <span class="s1">dx = -SPEED</span>
+      <span class="s0">if </span><span class="s1">key[pygame.K_d]:</span>
+       <span class="s1">dx = SPEED</span>
+     <span class="s3"># jump</span>
+      <span class="s0">if </span><span class="s1">key[pygame.K_w] </span><span class="s0">and </span><span class="s1">self.jump == </span><span class="s0">False</span><span class="s1">:</span>
+       <span class="s1">self.vel_y = -</span><span class="s2">30</span>
+       <span class="s1">self.jump = </span><span class="s0">True</span>
+
+     <span class="s3">#attack</span>
+      <span class="s0">if </span><span class="s1">key[pygame.K_r] </span><span class="s0">or </span><span class="s1">key[pygame.K_t]:</span>
+       <span class="s1">self.attack(surface</span><span class="s0">, </span><span class="s1">target)</span>
+
+    <span class="s3">#determine which attack type was used</span>
+      <span class="s0">if </span><span class="s1">key[pygame.K_r]:</span>
+       <span class="s1">self.attack_type = </span><span class="s2">1</span>
+      <span class="s0">if </span><span class="s1">key[pygame.K_t]:</span>
+       <span class="s1">self.attack_type = </span><span class="s2">2</span>
+
+    <span class="s3"># apply gravity</span>
+     <span class="s1">self.vel_y += GRAVITY</span>
+     <span class="s1">dy += self.vel_y</span>
+
+    <span class="s3"># ensure player stays on screen</span>
+     <span class="s0">if </span><span class="s1">self.rect.left + dx &lt; </span><span class="s2">0</span><span class="s1">:</span>
+        <span class="s1">dx = -self.rect.left</span>
+     <span class="s0">if </span><span class="s1">self.rect.right + dx &gt; screen_width:</span>
+        <span class="s1">dx = screen_width - self.rect.right</span>
+     <span class="s0">if </span><span class="s1">self.rect.bottom + dy &gt; screen_height - </span><span class="s2">40</span><span class="s1">:</span>
+        <span class="s1">self.vel_y = </span><span class="s2">0</span>
+        <span class="s1">self.jump = </span><span class="s0">False</span>
+        <span class="s1">dy = screen_height - </span><span class="s2">40 </span><span class="s1">- self.rect.bottom</span>
+
+    <span class="s3">#ensure players face each other</span>
+     <span class="s0">if </span><span class="s1">target.rect.centerx &gt; self.rect.centerx:</span>
+         <span class="s1">self.flip = </span><span class="s0">False</span>
+     <span class="s0">else</span><span class="s1">:</span>
+         <span class="s1">self.flip = </span><span class="s0">True</span>
+
+    <span class="s3"># update player position</span>
+     <span class="s1">self.rect.x += dx</span>
+     <span class="s1">self.rect.y += dy</span>
+
+    <span class="s0">def </span><span class="s1">attack(self</span><span class="s0">, </span><span class="s1">surface</span><span class="s0">, </span><span class="s1">target):</span>
+     <span class="s1">self.attacking = </span><span class="s0">True</span>
+     <span class="s1">attacking_rect = pygame.Rect(self.rect.centerx - (</span><span class="s2">2 </span><span class="s1">* self.rect.width * self.flip)</span><span class="s0">, </span><span class="s1">self.rect.y</span><span class="s0">, </span><span class="s2">2 </span><span class="s1">* self.rect.width</span><span class="s0">, </span><span class="s1">self.rect.height)</span>
+     <span class="s0">if </span><span class="s1">attacking_rect.colliderect(target.rect):</span>
+      <span class="s1">target.health -= </span><span class="s2">10</span>
+
+
+     <span class="s1">pygame.draw.rect(surface</span><span class="s0">, </span><span class="s1">(</span><span class="s2">0</span><span class="s0">, </span><span class="s2">255</span><span class="s0">, </span><span class="s2">0</span><span class="s1">)</span><span class="s0">, </span><span class="s1">attacking_rect)</span>
+
+    <span class="s0">def </span><span class="s1">draw(self</span><span class="s0">, </span><span class="s1">surface):</span>
+     <span class="s1">pygame.draw.rect(surface</span><span class="s0">, </span><span class="s1">(</span><span class="s2">255</span><span class="s0">, </span><span class="s2">0</span><span class="s0">, </span><span class="s2">0</span><span class="s1">)</span><span class="s0">, </span><span class="s1">self.rect)</span></pre>
+</body>
+</html>

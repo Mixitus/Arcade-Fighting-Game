@@ -1,0 +1,127 @@
+<html>
+<head>
+<title>main.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #808080;}
+.s3 { color: #6897bb;}
+.s4 { color: #6a8759;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+main.py</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">pygame</span>
+<span class="s0">from </span><span class="s1">fighter </span><span class="s0">import </span><span class="s1">Fighter</span>
+
+
+<span class="s1">pygame.init()</span>
+
+<span class="s2"># create a game window</span>
+<span class="s1">SCREEN_WIDTH = </span><span class="s3">1000</span>
+<span class="s1">SCREEN_HEIGHT = </span><span class="s3">500</span>
+
+<span class="s1">screen = pygame.display.set_mode((SCREEN_WIDTH</span><span class="s0">, </span><span class="s1">SCREEN_HEIGHT))</span>
+<span class="s1">pygame.display.set_caption(</span><span class="s4">&quot;Brawler&quot;</span><span class="s1">)</span>
+
+<span class="s2"># set frame rate</span>
+<span class="s1">clock = pygame.time.Clock()</span>
+<span class="s1">FPS = </span><span class="s3">60</span>
+
+<span class="s2"># define colors</span>
+<span class="s1">RED = (</span><span class="s3">255</span><span class="s0">, </span><span class="s3">0</span><span class="s0">, </span><span class="s3">0</span><span class="s1">)</span>
+<span class="s1">GREEN = (</span><span class="s3">0</span><span class="s0">, </span><span class="s3">255</span><span class="s0">, </span><span class="s3">0</span><span class="s1">)</span>
+<span class="s1">WHITE = (</span><span class="s3">255</span><span class="s0">, </span><span class="s3">255</span><span class="s0">, </span><span class="s3">255</span><span class="s1">)</span>
+
+<span class="s2"># define fighter variables</span>
+<span class="s1">WARRIOR_SIZE = </span><span class="s3">100</span>
+<span class="s1">WARRIOR_DATA = [WARRIOR_SIZE]</span>
+<span class="s1">WIZARD_SIZE = </span><span class="s3">100</span>
+<span class="s1">WIZARD_DATA = [WIZARD_SIZE]</span>
+
+<span class="s2"># load background image</span>
+<span class="s1">bg_image = pygame.image.load(</span><span class="s4">&quot;assets/images/background/background.gif&quot;</span><span class="s1">).convert_alpha()</span>
+
+<span class="s2"># load spritesheets</span>
+<span class="s1">warrior_sheet1 = pygame.image.load(</span><span class="s4">&quot;assets/images/warrior/sprites/Idle.png&quot;</span><span class="s1">).convert_alpha()</span>
+<span class="s1">warrior_sheet2 = pygame.image.load(</span><span class="s4">&quot;assets/images/warrior/sprites/Run.png&quot;</span><span class="s1">).convert_alpha()</span>
+<span class="s1">warrior_sheet3 = pygame.image.load(</span><span class="s4">&quot;assets/images/warrior/sprites/Jump.png&quot;</span><span class="s1">).convert_alpha()</span>
+<span class="s1">warrior_sheet4 = pygame.image.load(</span><span class="s4">&quot;assets/images/warrior/sprites/Fall.png&quot;</span><span class="s1">).convert_alpha()</span>
+<span class="s1">warrior_sheet5 = pygame.image.load(</span><span class="s4">&quot;assets/images/warrior/sprites/attack1.png&quot;</span><span class="s1">).convert_alpha()</span>
+<span class="s1">warrior_sheet6 = pygame.image.load(</span><span class="s4">&quot;assets/images/warrior/sprites/attack2.png&quot;</span><span class="s1">).convert_alpha()</span>
+<span class="s1">warrior_sheet7 = pygame.image.load(</span><span class="s4">&quot;assets/images/warrior/sprites/Take Hit.png&quot;</span><span class="s1">).convert_alpha()</span>
+<span class="s1">warrior_sheet8 = pygame.image.load(</span><span class="s4">&quot;assets/images/warrior/sprites/Take Hit - white silhouette.png&quot;</span><span class="s1">).convert_alpha()</span>
+<span class="s1">warrior_sheet9 = pygame.image.load(</span><span class="s4">&quot;assets/images/warrior/sprites/Death.png&quot;</span><span class="s1">).convert_alpha()</span>
+
+<span class="s1">wizard_sheet1 = pygame.image.load(</span><span class="s4">&quot;assets/images/wizard/sprites/Idle.png&quot;</span><span class="s1">).convert_alpha()</span>
+<span class="s1">wizard_sheet2 = pygame.image.load(</span><span class="s4">&quot;assets/images/wizard/sprites/Run.png&quot;</span><span class="s1">).convert_alpha()</span>
+<span class="s1">wizard_sheet3 = pygame.image.load(</span><span class="s4">&quot;assets/images/wizard/sprites/Jump.png&quot;</span><span class="s1">).convert_alpha()</span>
+<span class="s1">wizard_sheet4 = pygame.image.load(</span><span class="s4">&quot;assets/images/wizard/sprites/Fall.png&quot;</span><span class="s1">).convert_alpha()</span>
+<span class="s1">wizard_sheet5 = pygame.image.load(</span><span class="s4">&quot;assets/images/wizard/sprites/Attack1.png&quot;</span><span class="s1">).convert_alpha()</span>
+<span class="s1">wizard_sheet6 = pygame.image.load(</span><span class="s4">&quot;assets/images/wizard/sprites/Attack2.png&quot;</span><span class="s1">).convert_alpha()</span>
+<span class="s1">wizard_sheet7 = pygame.image.load(</span><span class="s4">&quot;assets/images/wizard/sprites/Take Hit.png&quot;</span><span class="s1">).convert_alpha()</span>
+<span class="s1">wizard_sheet8 = pygame.image.load(</span><span class="s4">&quot;assets/images/wizard/sprites/Take Hit - white silhouette.png&quot;</span><span class="s1">).convert_alpha()</span>
+<span class="s1">wizard_sheet9 = pygame.image.load(</span><span class="s4">&quot;assets/images/wizard/sprites/Death.png&quot;</span><span class="s1">).convert_alpha()</span>
+
+<span class="s2"># define the number of steps per animation</span>
+<span class="s1">WARRIOR_ANIMATION_STEPS = [</span><span class="s3">4</span><span class="s0">, </span><span class="s3">8</span><span class="s0">, </span><span class="s3">2</span><span class="s0">, </span><span class="s3">2</span><span class="s0">, </span><span class="s3">4</span><span class="s0">, </span><span class="s3">4</span><span class="s0">, </span><span class="s3">4</span><span class="s0">, </span><span class="s3">4</span><span class="s0">, </span><span class="s3">4</span><span class="s1">]</span>
+
+<span class="s1">WIZARD_ANIMATION_STEPS = [</span><span class="s3">4</span><span class="s0">, </span><span class="s3">8</span><span class="s0">, </span><span class="s3">2</span><span class="s0">, </span><span class="s3">2</span><span class="s0">, </span><span class="s3">4</span><span class="s0">, </span><span class="s3">4</span><span class="s0">, </span><span class="s3">4</span><span class="s0">, </span><span class="s3">4</span><span class="s0">, </span><span class="s3">4</span><span class="s1">]</span>
+
+<span class="s2"># function for drawing background</span>
+<span class="s0">def </span><span class="s1">draw_bg():</span>
+    <span class="s1">scaled_bg = pygame.transform.scale(bg_image</span><span class="s0">, </span><span class="s1">(SCREEN_WIDTH</span><span class="s0">, </span><span class="s1">SCREEN_HEIGHT))</span>
+    <span class="s1">screen.blit(scaled_bg</span><span class="s0">, </span><span class="s1">(</span><span class="s3">0</span><span class="s0">, </span><span class="s3">0</span><span class="s1">))</span>
+
+<span class="s2"># function for drawing health bars</span>
+<span class="s0">def </span><span class="s1">draw_health_bars(health</span><span class="s0">, </span><span class="s1">x</span><span class="s0">, </span><span class="s1">y):</span>
+    <span class="s1">ratio = health / </span><span class="s3">100</span>
+    <span class="s1">pygame.draw.rect(screen</span><span class="s0">, </span><span class="s1">WHITE</span><span class="s0">, </span><span class="s1">(x - </span><span class="s3">5</span><span class="s0">, </span><span class="s1">y - </span><span class="s3">5</span><span class="s0">, </span><span class="s3">410</span><span class="s0">, </span><span class="s3">40</span><span class="s1">))</span>
+    <span class="s1">pygame.draw.rect(screen</span><span class="s0">, </span><span class="s1">RED</span><span class="s0">, </span><span class="s1">(x</span><span class="s0">, </span><span class="s1">y</span><span class="s0">, </span><span class="s3">400</span><span class="s0">, </span><span class="s3">30</span><span class="s1">))</span>
+    <span class="s1">pygame.draw.rect(screen</span><span class="s0">, </span><span class="s1">GREEN</span><span class="s0">, </span><span class="s1">(x</span><span class="s0">, </span><span class="s1">y</span><span class="s0">, </span><span class="s3">400 </span><span class="s1">* ratio</span><span class="s0">, </span><span class="s3">30</span><span class="s1">))</span>
+
+
+<span class="s2"># create two instances of fighters</span>
+<span class="s1">fighter_1 = Fighter(</span><span class="s3">200</span><span class="s0">, </span><span class="s3">310</span><span class="s0">, </span><span class="s1">WARRIOR_DATA</span><span class="s0">, </span><span class="s1">warrior_sheet1</span><span class="s0">, </span><span class="s1">warrior_sheet2</span><span class="s0">, </span><span class="s1">warrior_sheet3</span><span class="s0">, </span><span class="s1">warrior_sheet4</span><span class="s0">, </span><span class="s1">warrior_sheet5</span><span class="s0">, </span><span class="s1">warrior_sheet6</span><span class="s0">, </span><span class="s1">warrior_sheet7</span><span class="s0">, </span><span class="s1">warrior_sheet8</span><span class="s0">, </span><span class="s1">warrior_sheet9</span><span class="s0">, </span><span class="s1">WARRIOR_ANIMATION_STEPS)</span>
+<span class="s1">fighter_2 = Fighter(</span><span class="s3">700</span><span class="s0">, </span><span class="s3">310</span><span class="s0">, </span><span class="s1">WIZARD_DATA</span><span class="s0">, </span><span class="s1">wizard_sheet1</span><span class="s0">, </span><span class="s1">wizard_sheet2</span><span class="s0">, </span><span class="s1">wizard_sheet3</span><span class="s0">, </span><span class="s1">wizard_sheet4</span><span class="s0">, </span><span class="s1">wizard_sheet5</span><span class="s0">, </span><span class="s1">wizard_sheet6</span><span class="s0">, </span><span class="s1">wizard_sheet7</span><span class="s0">, </span><span class="s1">wizard_sheet8</span><span class="s0">, </span><span class="s1">wizard_sheet9</span><span class="s0">, </span><span class="s1">WIZARD_ANIMATION_STEPS)</span>
+
+<span class="s2"># game loop (keeps the window on the screen until ready to exit game)</span>
+<span class="s1">run = </span><span class="s0">True</span>
+<span class="s0">while </span><span class="s1">run:</span>
+
+    <span class="s1">clock.tick(FPS)</span>
+
+    <span class="s2"># draw background</span>
+    <span class="s1">draw_bg()</span>
+
+<span class="s2"># show player stats</span>
+    <span class="s1">draw_health_bars(fighter_1.health</span><span class="s0">, </span><span class="s3">20</span><span class="s0">, </span><span class="s3">20</span><span class="s1">)</span>
+    <span class="s1">draw_health_bars(fighter_2.health</span><span class="s0">, </span><span class="s3">580</span><span class="s0">, </span><span class="s3">20</span><span class="s1">)</span>
+
+
+    <span class="s2"># move fighters</span>
+    <span class="s1">fighter_1.move(SCREEN_WIDTH</span><span class="s0">, </span><span class="s1">SCREEN_HEIGHT</span><span class="s0">, </span><span class="s1">screen</span><span class="s0">, </span><span class="s1">fighter_2)</span>
+
+
+    <span class="s2"># draw fighters</span>
+    <span class="s1">fighter_1.draw(screen)</span>
+    <span class="s1">fighter_2.draw(screen)</span>
+
+    <span class="s2"># event handler</span>
+    <span class="s0">for </span><span class="s1">event </span><span class="s0">in </span><span class="s1">pygame.event.get():</span>
+     <span class="s0">if </span><span class="s1">event.type == pygame.QUIT:</span>
+      <span class="s1">run = </span><span class="s0">False</span>
+
+
+<span class="s2"># update display</span>
+    <span class="s1">pygame.display.update()</span>
+
+<span class="s2"># exit pygame</span>
+<span class="s1">pygame.quit()</span></pre>
+</body>
+</html>

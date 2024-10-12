@@ -1,0 +1,52 @@
+<html>
+<head>
+<title>__main__.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #808080;}
+.s3 { color: #6897bb;}
+.s4 { color: #6a8759;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+__main__.py</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">os</span>
+<span class="s0">import </span><span class="s1">sys</span>
+<span class="s0">import </span><span class="s1">warnings</span>
+
+<span class="s2"># Remove '' and current working directory from the first entry</span>
+<span class="s2"># of sys.path, if present to avoid using current directory</span>
+<span class="s2"># in pip commands check, freeze, install, list and show,</span>
+<span class="s2"># when invoked as python -m pip &lt;command&gt;</span>
+<span class="s0">if </span><span class="s1">sys.path[</span><span class="s3">0</span><span class="s1">] </span><span class="s0">in </span><span class="s1">(</span><span class="s4">&quot;&quot;</span><span class="s0">, </span><span class="s1">os.getcwd()):</span>
+    <span class="s1">sys.path.pop(</span><span class="s3">0</span><span class="s1">)</span>
+
+<span class="s2"># If we are running from a wheel, add the wheel to sys.path</span>
+<span class="s2"># This allows the usage python pip-*.whl/pip install pip-*.whl</span>
+<span class="s0">if </span><span class="s1">__package__ == </span><span class="s4">&quot;&quot;</span><span class="s1">:</span>
+    <span class="s2"># __file__ is pip-*.whl/pip/__main__.py</span>
+    <span class="s2"># first dirname call strips of '/__main__.py', second strips off '/pip'</span>
+    <span class="s2"># Resulting path is the name of the wheel itself</span>
+    <span class="s2"># Add that to sys.path so we can import pip</span>
+    <span class="s1">path = os.path.dirname(os.path.dirname(__file__))</span>
+    <span class="s1">sys.path.insert(</span><span class="s3">0</span><span class="s0">, </span><span class="s1">path)</span>
+
+<span class="s0">if </span><span class="s1">__name__ == </span><span class="s4">&quot;__main__&quot;</span><span class="s1">:</span>
+    <span class="s2"># Work around the error reported in #9540, pending a proper fix.</span>
+    <span class="s2"># Note: It is essential the warning filter is set *before* importing</span>
+    <span class="s2">#       pip, as the deprecation happens at import time, not runtime.</span>
+    <span class="s1">warnings.filterwarnings(</span>
+        <span class="s4">&quot;ignore&quot;</span><span class="s0">, </span><span class="s1">category=DeprecationWarning</span><span class="s0">, </span><span class="s1">module=</span><span class="s4">&quot;.*packaging</span><span class="s0">\\</span><span class="s4">.version&quot;</span>
+    <span class="s1">)</span>
+    <span class="s0">from </span><span class="s1">pip._internal.cli.main </span><span class="s0">import </span><span class="s1">main </span><span class="s0">as </span><span class="s1">_main</span>
+
+    <span class="s1">sys.exit(_main())</span>
+</pre>
+</body>
+</html>
